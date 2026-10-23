@@ -1,0 +1,16 @@
+---
+import Base from '../../layouts/Base.astro';
+import DietCard from '../../components/DietCard.astro';
+import { published } from '../../lib/content';
+const diety = await published('diety');
+---
+<Base title="Diety A–Z" description="Přehled diet od A do Z: jak fungují, pro koho se hodí a nehodí, náročnost, cena a rizika. Na jedné stránce, se zdroji."
+  crumbs={[{ name: 'Úvod', href: '/' }, { name: 'Diety A–Z' }]}>
+  <div class="wrap" style="padding-top:16px">
+    <h1 class="h1">Diety A–Z</h1>
+    <p class="lead">Každá dieta má stejnou kartu: pro koho je, co se jí, rizika a co říká výzkum. Vyberte, co vás zajímá.</p>
+    <div class="grid-cards" style="margin-top:24px">
+      {diety.map((d) => <DietCard headingLevel="h2" name={d.data.title} summary={d.data.cardSummary} href={`/diety/${d.id}/`} difficulty={d.data.difficulty} cost={d.data.cost} tags={d.data.tags} macros={d.data.macros} />)}
+    </div>
+  </div>
+</Base>

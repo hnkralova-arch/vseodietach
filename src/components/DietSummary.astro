@@ -1,0 +1,26 @@
+---
+import Icon from './Icon.astro';
+import Meter from './Meter.astro';
+interface Props { forWhom: string[]; notFor: string[]; difficulty?: number; cost?: number }
+const { forWhom, notFor, difficulty, cost } = Astro.props;
+---
+<section class="vod-summary" aria-labelledby="shrnuti">
+  <h2 class="vod-summary-title" id="shrnuti">Shrnutí</h2>
+  <div class="vod-summary-cols">
+    <div>
+      <h3 class="vod-summary-h">Hodí se, když</h3>
+      <ul class="vod-checklist is-yes">{forWhom.map((t) => <li><Icon name="check" /><span>{t}</span></li>)}</ul>
+    </div>
+    <div>
+      <h3 class="vod-summary-h">Nehodí se, když</h3>
+      <ul class="vod-checklist is-no">{notFor.map((t) => <li><Icon name="cross" /><span>{t}</span></li>)}</ul>
+    </div>
+  </div>
+  <div class="vod-summary-meters">
+    {difficulty != null && <Meter label="Náročnost" value={difficulty} />}
+    {cost != null && <Meter label="Cena" value={cost} />}
+  </div>
+</section>
+<style>
+  .vod-summary-h { margin: 0 0 var(--space-2); font-size: 15px; line-height: 20px; font-weight: 700; }
+</style>

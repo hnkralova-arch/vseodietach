@@ -1,0 +1,50 @@
+{
+  "_info": "Nutriční hodnoty na 100 g jedlého podílu. Zdroj: USDA FoodData Central (public domain). Hodnoty s verified=false jsou předběžné a přepíše je skript `npm run usda` (potřebuje USDA_API_KEY).",
+  "foods": {
+    "cizrna-varena": {
+      "name": "cizrna, uvařená",
+      "usdaQuery": "Chickpeas (garbanzo beans, bengal gram), mature seeds, cooked, boiled, without salt",
+      "dataType": "SR Legacy",
+      "per100g": { "kcal": 164, "protein": 8.86, "fat": 2.59, "carbs": 27.42, "fiber": 7.6 },
+      "verified": false
+    },
+    "rajcata": {
+      "name": "rajčata",
+      "usdaQuery": "Tomatoes, red, ripe, raw, year round average",
+      "dataType": "SR Legacy",
+      "per100g": { "kcal": 18, "protein": 0.88, "fat": 0.2, "carbs": 3.89, "fiber": 1.2 },
+      "verified": false
+    },
+    "olivovy-olej": {
+      "name": "olivový olej",
+      "usdaQuery": "Oil, olive, salad or cooking",
+      "dataType": "SR Legacy",
+      "per100g": { "kcal": 884, "protein": 0, "fat": 100, "carbs": 0, "fiber": 0 },
+      "density": 0.91,
+      "verified": false
+    },
+    "feta": {
+      "name": "feta",
+      "usdaQuery": "Cheese, feta",
+      "dataType": "SR Legacy",
+      "per100g": { "kcal": 264, "protein": 14.21, "fat": 21.28, "carbs": 4.09, "fiber": 0 },
+      "verified": false
+    },
+    "vejce": {
+      "name": "vejce",
+      "usdaQuery": "Egg, whole, raw, fresh",
+      "dataType": "SR Legacy",
+      "per100g": { "kcal": 143, "protein": 12.56, "fat": 9.51, "carbs": 0.72, "fiber": 0 },
+      "gramsPerPiece": 50,
+      "verified": false
+    },
+    "kmin": {
+      "name": "kmín",
+      "usdaQuery": "Spices, caraway seed",
+      "dataType": "SR Legacy",
+      "per100g": { "kcal": 333, "protein": 19.77, "fat": 14.59, "carbs": 49.9, "fiber": 38 },
+      "gramsPerTsp": 2.1,
+      "verified": false
+    }
+  }
+}

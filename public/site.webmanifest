@@ -1,0 +1,14 @@
+{
+  "name": "Vše o dietách",
+  "short_name": "Vše o dietách",
+  "lang": "cs",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#fafcfb",
+  "theme_color": "#19454b",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

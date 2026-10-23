@@ -1,0 +1,122 @@
+---
+import Base from '../layouts/Base.astro';
+import ProblemPicker from '../components/ProblemPicker.astro';
+import DietCard from '../components/DietCard.astro';
+import Icon from '../components/Icon.astro';
+import Tag from '../components/Tag.astro';
+import { published, problemHref } from '../lib/content';
+
+const diety = await published('diety');
+const recepty = await published('recepty');
+const problems = [
+  { label: 'Chci začít hubnout', hint: 'Jak vybrat dietu, která vydrží', icon: 'sprout', tone: 'teal', href: '/diety/' },
+  { label: 'Nehubnu, i když se snažím', hint: 'Stagnace a nejčastější příčiny', icon: 'plateau', tone: 'lemon', href: await problemHref('proc-nehubnu') },
+  { label: 'Vrací se mi váha', hint: 'Jojo efekt není selhání vůle', icon: 'loop', tone: 'berry', href: await problemHref('jojo-efekt') },
+  { label: 'Večer mám chutě', hint: 'Stres, spánek a večerní jedení', icon: 'moon', tone: 'berry', href: await problemHref('vecerni-chute') },
+  { label: 'Nevím, kolik mám jíst', hint: 'Kalkulačka denního příjmu', icon: 'scale', tone: 'lemon', href: '/kalkulacky/denni-prijem/' },
+  { label: 'Zajímají mě injekce na hubnutí', hint: 'Jak fungují, cena a úhrada v ČR', icon: 'syringe', tone: 'teal', href: await problemHref('injekce-na-hubnuti') },
+] as const;
+const firstRecipe = recepty[0];
+---
+<Base title="Vše o dietách" description="Klidný průvodce dietami: vyberte dietu, spočítejte si příjem, najděte recepty a zjistěte, proč to nejde. Věcně, se zdroji a bez tlaku na vzhled.">
+  <section id="co-resite" class="sec" style="padding-top:64px;padding-bottom:56px">
+    <div class="wrap">
+      <ProblemPicker intro="Vyberte, co je vám nejblíž. Každá cesta vede k vysvětlení, nástroji a jídelníčku." items={[...problems]}>
+        <p class="vod-picker-foot">Nic z toho nesedí? <a href="/diety/">Projděte si všechny diety od A do Z.</a></p>
+      </ProblemPicker>
+    </div>
+  </section>
+
+  <section class="trust" aria-label="Jak web vzniká">
+    <div class="wrap">
+      <span><Icon name="book" />U každého článku zdroje</span>
+      <span><Icon name="calendar" />Datum poslední aktualizace</span>
+      <span><Icon name="info" />Informace, ne lékařská rada</span>
+      <a href="/jak-web-vznika/">Jak web vzniká</a>
+    </div>
+  </section>
+
+  {diety.length > 0 && (
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head">
+          <div>
+            <h2 class="h2big">Diety</h2>
+            <p class="muted" style="margin:0">Každá dieta má stejnou kartu: pro koho je, co se jí, rizika a co říká výzkum.</p>
+          </div>
+          <a href="/diety/" class="vod-btn vod-btn-secondary">Všechny diety</a>
+        </div>
+        <div class="grid-cards">
+          {diety.slice(0, 4).map((d) => (
+            <DietCard name={d.data.title} summary={d.data.cardSummary} href={`/diety/${d.id}/`} difficulty={d.data.difficulty} cost={d.data.cost} tags={d.data.tags} macros={d.data.macros} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="sec band-teal" aria-labelledby="nastroje">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <h2 id="nastroje" class="h2big">Spočítejte si to</h2>
+          <p style="margin:0;opacity:.9">Kalkulačky počítají jen ve vašem prohlížeči. Nic neukládáme ani neodesíláme.</p>
+        </div>
+      </div>
+      <div class="grid-3">
+        <a class="tool" href="/kalkulacky/denni-prijem/">
+          <strong>Kolik mám jíst</strong>
+          <span>Denní příjem na udržení i na pozvolné hubnutí, s bezpečnou spodní hranicí.</span>
+          <span class="go">Spočítat příjem</span>
+        </a>
+        {firstRecipe && (
+          <a class="tool" href={`/recepty/${firstRecipe.id}/`}>
+            <strong>Recept na vaše kcal</strong>
+            <span>U každého receptu zvolíte energii na porci a gramy surovin se přepočítají.</span>
+            <span class="go">Vyzkoušet na receptu</span>
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap" style="display:flex;flex-wrap:wrap;gap:24px">
+      <div class="panel panel-lemon" style="flex:2 1 420px">
+        <span><Tag tone="outline">sezónní</Tag></span>
+        <h2 class="h2big" style="font-size:32px;line-height:38px">Vánoce v klidu</h2>
+        <p style="margin:0;max-width:56ch">Pár dní hodování nic nezkazí. Připravujeme průvodce, jak jíst o svátcích, aby vám bylo dobře. Bez výčitek a bez detoxů v lednu.</p>
+      </div>
+      <div class="panel" style="flex:1 1 300px">
+        <h2 style="margin:0;font-size:22px;line-height:28px">Recepty s přepočtem</h2>
+        <p class="muted" style="margin:0;font-size:16px;line-height:24px">Jednoduché recepty, u kterých si nastavíte energii na porci.</p>
+        <ul class="list-links">
+          {recepty.slice(0, 4).map((r) => <li><a href={`/recepty/${r.id}/`}>{r.data.title}</a></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="background:var(--teal-wash)">
+    <div class="wrap">
+      <div class="sec-head"><div><h2 class="h2big">Mýty a fakta</h2></div></div>
+      <div class="grid-3">
+        <article class="myth">
+          <span><Tag tone="berry">mýtus</Tag></span>
+          <h3>Detoxikační kúra vyplaví toxiny</h3>
+          <p>Tělo se čistí samo, hlavně játry a ledvinami. Šťávy a čaje na tom nic nemění.</p>
+        </article>
+        <article class="myth">
+          <span><Tag tone="berry">mýtus</Tag></span>
+          <h3>Po šesté večer se nejí</h3>
+          <p>Pro váhu rozhoduje hlavně celkový příjem za den, ne hodina na hodinách.</p>
+        </article>
+        <article class="myth">
+          <span><Tag>fakt</Tag></span>
+          <h3>Bílkoviny zasytí na déle</h3>
+          <p>Proto se s nimi lidem snáz drží mírný deficit. Nespalují ale tuk.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</Base>

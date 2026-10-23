@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import CalcIntake from '../../components/CalcIntake.astro';
+import Notice from '../../components/Notice.astro';
+const schema = [{
+  '@type': 'WebApplication', name: 'Kalkulačka denního příjmu', applicationCategory: 'HealthApplication', operatingSystem: 'Web',
+  inLanguage: 'cs', offers: { '@type': 'Offer', price: '0', priceCurrency: 'CZK' },
+}];
+---
+<Base title="Kalkulačka denního příjmu: kolik mám jíst" description="Spočítejte si orientační denní příjem energie na udržení váhy a na pozvolné hubnutí. Rovnice Mifflin-St Jeor, bezpečná spodní hranice."
+  schema={schema} crumbs={[{ name: 'Úvod', href: '/' }, { name: 'Kalkulačky', href: '/kalkulacky/' }, { name: 'Denní příjem' }]}>
+  <div class="wrap" style="padding-top:16px">
+    <div class="stack" style="max-width:820px">
+      <div>
+        <h1 class="h1">Kolik mám jíst?</h1>
+        <p class="lead" style="margin:0">Odhad denního příjmu energie na udržení váhy a na pozvolné hubnutí. Počítá se jen ve vašem prohlížeči, nic neukládáme.</p>
+      </div>
+      <CalcIntake />
+      <section class="prose" aria-labelledby="jak-pocitame">
+        <h2 id="jak-pocitame" style="margin-top:16px">Jak počítáme</h2>
+        <p>Bazální metabolismus odhadujeme rovnicí Mifflin-St Jeor a násobíme ho podle pohybu. Pro pozvolné hubnutí odečítáme nejvýš 500 kcal nebo 20 % příjmu a nikdy neukážeme méně než 1 200 kcal denně.</p>
+        <p>Je to orientační odhad pro zdravé dospělé. Skutečná potřeba se může lišit o stovky kcal.</p>
+      </section>
+      <Notice tone="info">Kalkulačka není určená pro těhotné a kojící, pro lidi s nemocí, která ovlivňuje váhu, a pro děti. V těchto situacích se poraďte s lékařem.</Notice>
+      <Notice tone="help" title="Trápí vás jídlo nebo váha víc, než byste chtěli?" action={{ label: 'Kde najít podporu', href: '/pomoc/' }}>Nejste na to sami. Odborníci na poruchy příjmu potravy pomáhají.</Notice>
+    </div>
+  </div>
+</Base>

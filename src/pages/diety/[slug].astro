@@ -1,0 +1,96 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import QuickAnswer from '../../components/QuickAnswer.astro';
+import SourceMeta from '../../components/SourceMeta.astro';
+import DietSummary from '../../components/DietSummary.astro';
+import PlateChart from '../../components/PlateChart.astro';
+import Notice from '../../components/Notice.astro';
+import CompareTable from '../../components/CompareTable.astro';
+import DietCard from '../../components/DietCard.astro';
+import { published } from '../../lib/content';
+import { AUTHOR } from '../../config';
+
+export async function getStaticPaths() {
+  const diety = await published('diety');
+  return diety.map((entry) => ({ params: { slug: entry.id }, props: { entry, all: diety } }));
+}
+const { entry, all } = Astro.props;
+const d = entry.data;
+const { Content, headings } = await render(entry);
+const similar = all.filter((x) => d.similar.includes(x.id));
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const toc = [
+  ...headings.filter((h) => h.depth === 2).map((h) => ({ href: `#${h.slug}`, text: h.text })),
+  ...(d.compare ? [{ href: '#srovnani', text: d.compare.title }] : []),
+  ...(d.faq.length ? [{ href: '#otazky', text: 'Časté otázky' }] : []),
+  { href: '#zdroje', text: 'Zdroje' },
+];
+const schema = [
+  {
+    '@type': 'Article', headline: d.title, description: d.description, inLanguage: 'cs', mainEntityOfPage: url,
+    datePublished: d.published.toISOString(), dateModified: d.updated.toISOString(),
+    author: { '@type': 'Organization', name: AUTHOR }, publisher: { '@id': `${Astro.site!.origin}/#organizace` },
+    citation: d.sources.filter((s) => s.url).map((s) => s.url),
+  },
+  ...(d.faq.length ? [{ '@type': 'FAQPage', mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
+];
+---
+<Base title={d.title} description={d.description} ogType="article" schema={schema}
+  crumbs={[{ name: 'Úvod', href: '/' }, { name: 'Diety A–Z', href: '/diety/' }, { name: d.title }]}>
+  <div class="wrap">
+    <div class="layout">
+      <article class="main">
+        <h1 class="h1">{d.title}</h1>
+        <p class="lead">{d.lead}</p>
+        <div class="stack">
+          <SourceMeta author={AUTHOR} updated={d.updated} sources={d.sources.length} />
+          <QuickAnswer><p>{d.quickAnswer}</p></QuickAnswer>
+          <DietSummary forWhom={d.forWhom} notFor={d.notFor} difficulty={d.difficulty} cost={d.cost} />
+        </div>
+        <div class="prose"><Content /></div>
+        <div style="margin-top:24px"><Notice tone="risk" title="Rizika a vedlejší účinky">{d.risks}</Notice></div>
+        {d.compare && (
+          <section class="prose" aria-labelledby="srovnani">
+            <h2 id="srovnani">{d.compare.title}</h2>
+            <CompareTable caption={d.compare.title} columns={d.compare.columns} rows={d.compare.rows} verdict={d.compare.verdict} />
+          </section>
+        )}
+        {d.faq.length > 0 && (
+          <section class="prose faq" aria-labelledby="otazky">
+            <h2 id="otazky">Časté otázky</h2>
+            {d.faq.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+          </section>
+        )}
+        {similar.length > 0 && (
+          <section class="prose" aria-labelledby="podobne">
+            <h2 id="podobne">Podobné diety</h2>
+            <div class="grid-cards">{similar.map((s) => <DietCard name={s.data.title} summary={s.data.cardSummary} href={`/diety/${s.id}/`} difficulty={s.data.difficulty} cost={s.data.cost} macros={s.data.macros} />)}</div>
+          </section>
+        )}
+        <section class="prose" aria-labelledby="zdroje">
+          <h2 id="zdroje">Zdroje</h2>
+          <ol class="sources">
+            {d.sources.map((s) => <li>{s.url ? <a href={s.url} rel="noopener">{s.title}</a> : s.title}{s.todo && <strong> [doplnit před spuštěním]</strong>}</li>)}
+          </ol>
+        </section>
+      </article>
+
+      <aside>
+        <div class="panel" style="padding:24px">
+          <PlateChart id="dieta" title={`Typický den: ${d.title.toLowerCase()}`} {...d.macros} />
+          <p class="note-small">Orientační podíl energie ze sacharidů, bílkovin a tuků.</p>
+        </div>
+        <div class="cta-teal">
+          <strong>Kolik byste měli jíst?</strong>
+          <span>Spočítejte si denní příjem na udržení i pozvolné hubnutí.</span>
+          <a href="/kalkulacky/denni-prijem/" class="vod-btn vod-btn-primary">Spočítat příjem</a>
+        </div>
+        <nav class="toc" aria-label="Obsah článku">
+          <strong style="font-size:15px;line-height:20px;margin-bottom:6px">Obsah</strong>
+          {toc.map((t) => <a href={t.href}>{t.text}</a>)}
+        </nav>
+      </aside>
+    </div>
+  </div>
+</Base>

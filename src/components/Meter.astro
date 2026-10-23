@@ -1,0 +1,15 @@
+---
+/** Tři body a slovo. Význam nese slovo, body ho jen zrychlují. */
+interface Props { label: string; value: number; max?: number; valueText?: string }
+const { label, value, max = 3, valueText } = Astro.props;
+const LEVELS = ['nízká', 'střední', 'vysoká'];
+const v = Math.max(0, Math.min(max, value));
+const word = valueText ?? LEVELS[Math.round((v / max) * 3) - 1] ?? '';
+---
+<span class="vod-meter" role="img" aria-label={`${label}: ${word}`}>
+  <span class="vod-meter-label" aria-hidden="true">{label}</span>
+  <span class="vod-meter-dots" aria-hidden="true">
+    {Array.from({ length: max }, (_, i) => <span class:list={['vod-meter-dot', { 'is-on': i < v }]}></span>)}
+  </span>
+  <span class="vod-meter-value" aria-hidden="true">{word}</span>
+</span>

@@ -1,0 +1,24 @@
+---
+/** Srovnání 2–3 diet. Na úzkém displeji se tabulka složí do karet. */
+interface Props { caption: string; columns: string[]; rows: { label: string; values: string[] }[]; verdict?: string }
+const { caption, columns, rows, verdict } = Astro.props;
+---
+<section class="vod-compare">
+  <table class="vod-compare-table">
+    <caption class="sr-only">{caption}</caption>
+    <thead><tr><td></td>{columns.map((c) => <th scope="col">{c}</th>)}</tr></thead>
+    <tbody>{rows.map((r) => <tr><th scope="row">{r.label}</th>{r.values.map((v) => <td>{v}</td>)}</tr>)}</tbody>
+  </table>
+  <div class="vod-compare-cards" aria-hidden="true">
+    {columns.map((c, ci) => (
+      <article class="vod-compare-card">
+        <h3>{c}</h3>
+        <dl>{rows.map((r) => <><dt>{r.label}</dt><dd>{r.values[ci]}</dd></>)}</dl>
+      </article>
+    ))}
+  </div>
+  {verdict && <p class="vod-compare-verdict">{verdict}</p>}
+</section>
+<style>
+  .vod-compare-table thead td { background: var(--teal-wash); }
+</style>

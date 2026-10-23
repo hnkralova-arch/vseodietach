@@ -1,0 +1,101 @@
+---
+/**
+ * Přepočet receptu na cílové kcal na porci a počet porcí.
+ * Server vykreslí výchozí recept (funguje i bez JavaScriptu), skript v prohlížeči přepočítává.
+ */
+import { recipeNutrition, toGrams, getFood, roundAmount, nf, type IngredientInput } from '../lib/nutrition';
+interface Props { ingredients: IngredientInput[]; portions: number; min?: number; max?: number; presets?: number[] }
+const { ingredients, portions, min = 250, max = 800, presets = [300, 400, 500, 600] } = Astro.props;
+const { perPortion, verified } = recipeNutrition(ingredients, portions);
+const baseKcal = Math.round(perPortion.kcal / 10) * 10;
+const lo = Math.max(150, Math.min(min, baseKcal));
+const hi = Math.max(max, baseKcal);
+const rows = ingredients.map((i) => ({ label: i.label ?? getFood(i.food).name, amount: i.amount, unit: i.unit, grams: toGrams(i) }));
+const config = {
+  baseKcal: perPortion.kcal, basePortions: portions,
+  macros: { protein: perPortion.protein, carbs: perPortion.carbs, fat: perPortion.fat },
+  rows: rows.map((r) => ({ amount: r.amount, unit: r.unit })),
+};
+---
+<section class="vod-scaler" aria-labelledby="scaler-title" data-scaler={JSON.stringify(config)}>
+  <div class="vod-scaler-head">
+    <h2 class="vod-scaler-title" id="scaler-title">Upravit recept na míru</h2>
+    <button type="button" class="vod-btn vod-btn-quiet vod-btn-small" data-reset>Vrátit původní</button>
+  </div>
+  <div class="vod-scaler-controls">
+    <div>
+      <label class="vod-field-label" for="scaler-kcal">Energie na porci</label>
+      <output for="scaler-kcal" class="vod-figure" aria-live="polite"><span data-kcal>{nf(baseKcal)}</span><span class="vod-figure-unit">kcal</span></output>
+      <input id="scaler-kcal" class="vod-range" type="range" min={lo} max={hi} step="10" value={baseKcal} data-range aria-valuetext={`${nf(baseKcal)} kcal na porci`} />
+      <div class="vod-range-scale" aria-hidden="true"><span>{nf(lo)} kcal</span><span>{nf(hi)} kcal</span></div>
+      <div class="vod-presets" role="group" aria-label="Rychlá volba">
+        {presets.map((p) => <button type="button" class="vod-chip" aria-pressed="false" data-preset={p}>{nf(p)} kcal</button>)}
+      </div>
+    </div>
+    <div>
+      <span class="vod-field-label" id="scaler-portions-l">Počet porcí</span>
+      <div class="vod-stepper" role="group" aria-labelledby="scaler-portions-l">
+        <button type="button" class="vod-step" aria-label="Ubrat porci" data-minus>−</button>
+        <output aria-live="polite" data-portions>{portions}</output>
+        <button type="button" class="vod-step" aria-label="Přidat porci" data-plus>+</button>
+      </div>
+    </div>
+  </div>
+  <ul class="vod-ingredients">
+    {rows.map((r, i) => <li><span class="vod-amount" data-amount={i}>{nf(roundAmount(r.amount, r.unit), 1)}&nbsp;{r.unit}</span><span>{r.label}</span></li>)}
+  </ul>
+  <p class="vod-scaler-totals">
+    <span>Na porci: <b data-t-kcal>{nf(baseKcal)} kcal</b></span>
+    <span>bílkoviny <b data-t-protein>{nf(perPortion.protein)} g</b></span>
+    <span>sacharidy <b data-t-carbs>{nf(perPortion.carbs)} g</b></span>
+    <span>tuky <b data-t-fat>{nf(perPortion.fat)} g</b></span>
+  </p>
+  <p class="vod-note">
+    Hodnoty jsou orientační, spočítané z databáze USDA FoodData Central. Nejde o jídelníček na míru.
+    {!verified && <strong> Předběžné hodnoty, čekají na ověření v databázi.</strong>}
+  </p>
+</section>
+
+<script>
+  const nf = (v: number, d = 0) => v.toLocaleString('cs-CZ', { maximumFractionDigits: d });
+  const roundAmount = (v: number, unit: string) => {
+    if (unit === 'g' || unit === 'ml') {
+      if (v < 10) return Math.round(v * 2) / 2;
+      if (v < 100) return Math.round(v);
+      return Math.round(v / 5) * 5;
+    }
+    return Math.max(0.5, Math.round(v * 2) / 2);
+  };
+  document.querySelectorAll<HTMLElement>('[data-scaler]').forEach((root) => {
+    const cfg = JSON.parse(root.dataset.scaler!);
+    const range = root.querySelector<HTMLInputElement>('[data-range]')!;
+    const startKcal = Number(range.value);
+    let kcal = startKcal;
+    let portions = cfg.basePortions as number;
+    const $ = (s: string) => root.querySelector<HTMLElement>(s)!;
+    const render = () => {
+      const factor = (kcal / cfg.baseKcal) * (portions / cfg.basePortions);
+      const per = kcal / cfg.baseKcal;
+      $('[data-kcal]').textContent = nf(kcal);
+      range.value = String(kcal);
+      range.setAttribute('aria-valuetext', `${nf(kcal)} kcal na porci`);
+      $('[data-portions]').textContent = String(portions);
+      root.querySelector<HTMLButtonElement>('[data-minus]')!.disabled = portions <= 1;
+      root.querySelector<HTMLButtonElement>('[data-plus]')!.disabled = portions >= 12;
+      cfg.rows.forEach((r: { amount: number; unit: string }, i: number) => {
+        $(`[data-amount="${i}"]`).textContent = `${nf(roundAmount(r.amount * factor, r.unit), 1)} ${r.unit}`;
+      });
+      $('[data-t-kcal]').textContent = `${nf(kcal)} kcal`;
+      $('[data-t-protein]').textContent = `${nf(cfg.macros.protein * per)} g`;
+      $('[data-t-carbs]').textContent = `${nf(cfg.macros.carbs * per)} g`;
+      $('[data-t-fat]').textContent = `${nf(cfg.macros.fat * per)} g`;
+      root.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.preset) === kcal)));
+    };
+    range.addEventListener('input', () => { kcal = Number(range.value); render(); });
+    root.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach((b) => b.addEventListener('click', () => { kcal = Number(b.dataset.preset); render(); }));
+    root.querySelector('[data-minus]')!.addEventListener('click', () => { portions = Math.max(1, portions - 1); render(); });
+    root.querySelector('[data-plus]')!.addEventListener('click', () => { portions = Math.min(12, portions + 1); render(); });
+    root.querySelector('[data-reset]')!.addEventListener('click', () => { kcal = startKcal; portions = cfg.basePortions; render(); });
+    render();
+  });
+</script>

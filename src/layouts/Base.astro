@@ -1,0 +1,131 @@
+---
+import '../styles/tokens.css';
+import '../styles/components.css';
+import '../styles/global.css';
+import Logo from '../components/Logo.astro';
+import Notice from '../components/Notice.astro';
+import { LAUNCHED } from '../config';
+
+export interface Crumb { name: string; href?: string }
+interface Props {
+  title: string;
+  description: string;
+  /** Strukturovaná data (JSON-LD) navíc k webu a organizaci. */
+  schema?: Record<string, unknown>[];
+  crumbs?: Crumb[];
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+}
+const { title, description, schema = [], crumbs, ogType = 'website', noindex = false } = Astro.props;
+const site = Astro.site!;
+const canonical = new URL(Astro.url.pathname, site).href;
+const fullTitle = Astro.url.pathname === '/' ? 'Vše o dietách – klidný průvodce dietami' : `${title} | Vše o dietách`;
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/#co-resite', label: 'Co řešíte' },
+  { href: '/diety/', label: 'Diety A–Z' },
+  { href: '/kalkulacky/', label: 'Nástroje' },
+  { href: '/recepty/', label: 'Recepty' },
+];
+const org = { '@type': 'Organization', '@id': `${site.origin}/#organizace`, name: 'Vše o dietách', url: site.href, logo: new URL('/icon-512.png', site).href };
+const graph: Record<string, unknown>[] = [
+  org,
+  { '@type': 'WebSite', '@id': `${site.origin}/#web`, url: site.href, name: 'Vše o dietách', inLanguage: 'cs', publisher: { '@id': org['@id'] } },
+  ...(crumbs
+    ? [{
+        '@type': 'BreadcrumbList',
+        itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, ...(c.href ? { item: new URL(c.href, site).href } : {}) })),
+      }]
+    : []),
+  ...schema,
+];
+const ld = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
+---
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  {(noindex || !LAUNCHED) && <meta name="robots" content="noindex" />}
+  <meta name="theme-color" content="#19454b" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0b1a1c" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="preload" href="/fonts/Figtree-Variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:locale" content="cs_CZ" />
+  <meta property="og:site_name" content="Vše o dietách" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={new URL('/og.png', site).href} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json" set:html={ld} />
+</head>
+<body>
+  <a class="skip" href="#obsah">Přeskočit na obsah</a>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/" aria-label="Vše o dietách, úvodní stránka"><Logo id="hdr" height={32} /></a>
+      <nav class="main-nav" aria-label="Hlavní menu">
+        {nav.map((n) => <a href={n.href} aria-current={n.href !== '/#co-resite' && path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>)}
+      </nav>
+      <form class="site-search" role="search" action="https://www.google.com/search" method="get">
+        <label for="hledat" class="sr-only">Hledat na webu</label>
+        <input id="hledat" type="search" name="q" placeholder="Hledat dietu, potravinu…" />
+        <input type="hidden" name="as_sitesearch" value={site.hostname} />
+      </form>
+    </div>
+  </header>
+
+  <main id="obsah">
+    {crumbs && (
+      <nav class="wrap page-top crumbs" aria-label="Drobečková navigace">
+        <ol>{crumbs.map((c) => <li>{c.href ? <a href={c.href}>{c.name}</a> : <span aria-current="page">{c.name}</span>}</li>)}</ol>
+      </nav>
+    )}
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="cols">
+        <div style="display:grid;gap:12px;max-width:360px">
+          <Logo id="ftr" height={32} />
+          <p class="muted" style="margin:0;font-size:16px;line-height:24px">Klidný průvodce dietami. Věcně, se zdroji a bez tlaku na vzhled.</p>
+        </div>
+        <nav aria-label="Patička">
+          <div>
+            <strong>Web</strong>
+            <a href="/jak-web-vznika/">Jak web vzniká</a>
+            <a href="/redakcni-zasady/">Redakční zásady</a>
+            <a href="/o-nas/">O nás a kontakt</a>
+          </div>
+          <div>
+            <strong>Obsah</strong>
+            <a href="/diety/">Diety A–Z</a>
+            <a href="/recepty/">Recepty</a>
+            <a href="/kalkulacky/">Kalkulačky</a>
+          </div>
+          <div>
+            <strong>Právní</strong>
+            <a href="/ochrana-osobnich-udaju/">Ochrana osobních údajů</a>
+            <a href="/pomoc/">Kde najít pomoc</a>
+          </div>
+        </nav>
+      </div>
+      <div class="notices">
+        <Notice tone="info">Obsah je informační a nenahrazuje radu lékaře ani nutričního terapeuta.</Notice>
+      </div>
+      <p class="copy">© {new Date().getFullYear()} Vše o dietách</p>
+    </div>
+  </footer>
+</body>
+</html>

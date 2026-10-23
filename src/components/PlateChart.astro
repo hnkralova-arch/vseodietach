@@ -1,0 +1,46 @@
+---
+/** Talíř živin: podíl energie ze sacharidů, bílkovin a tuků. Stejný jazyk jako logo. Hodnoty vždy i v legendě. */
+interface Props { carbs: number; protein: number; fat: number; title?: string; size?: number; compact?: boolean; id: string }
+const { carbs, protein, fat, title, size = 88, compact = false, id } = Astro.props;
+const total = carbs + protein + fat || 1;
+const rows = [
+  { key: 'carbs', label: 'sacharidy', v: carbs, cls: 'pc-lemon' },
+  { key: 'protein', label: 'bílkoviny', v: protein, cls: 'pc-berry' },
+  { key: 'fat', label: 'tuky', v: fat, cls: 'pc-teal' },
+].filter((r) => r.v > 0);
+const pct = (v: number) => Math.round((v / total) * 100);
+const c = size / 2, r = size / 2 - 2, gap = Math.max(2, size / 28);
+const rad = (a: number) => ((a - 90) * Math.PI) / 180;
+let a = 0;
+const segs = rows.map((row) => {
+  const deg = (row.v / total) * 360;
+  const a0 = a, a1 = a + deg; a = a1;
+  if (deg >= 359.99) return { ...row, d: `M${c - r},${c}a${r},${r} 0 1 0 ${2 * r},0a${r},${r} 0 1 0 ${-2 * r},0Z`, a0 };
+  const p = (ang: number) => `${(c + r * Math.cos(rad(ang))).toFixed(2)},${(c + r * Math.sin(rad(ang))).toFixed(2)}`;
+  return { ...row, d: `M${c},${c}L${p(a0)}A${r},${r} 0 ${deg > 180 ? 1 : 0} 1 ${p(a1)}Z`, a0 };
+});
+const label = 'Rozložení energie: ' + rows.map((x) => `${x.label} ${pct(x.v)} %`).join(', ');
+const mid = `pm-${id}`;
+---
+<figure class:list={['vod-plate', { 'is-compact': compact }]}>
+  <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} role="img" aria-label={label}>
+    <mask id={mid} maskUnits="userSpaceOnUse">
+      <rect x="0" y="0" width={size} height={size} fill="#fff" />
+      {segs.length > 1 && segs.map((s) => <line x1={c} y1={c} x2={c + (r + 2) * Math.cos(rad(s.a0))} y2={c + (r + 2) * Math.sin(rad(s.a0))} stroke="#000" stroke-width={gap} />)}
+    </mask>
+    <g mask={`url(#${mid})`}>{segs.map((s) => <path class={s.cls} d={s.d} />)}</g>
+  </svg>
+  {!compact && (
+    <figcaption>
+      {title && <span class="vod-plate-title">{title}</span>}
+      <ul class="vod-plate-legend">
+        {rows.map((x) => <li><span class={`vod-plate-swatch ${x.cls}`} aria-hidden="true"></span><span>{x.label}</span><b>{pct(x.v)}&nbsp;%</b></li>)}
+      </ul>
+    </figcaption>
+  )}
+</figure>
+<style>
+  .pc-lemon { fill: var(--lemon); background: var(--lemon); }
+  .pc-berry { fill: var(--berry); background: var(--berry); }
+  .pc-teal { fill: var(--teal-bright); background: var(--teal-bright); }
+</style>

@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import { published } from '../../lib/content';
+const recepty = await published('recepty');
+---
+<Base title="Kalkulačky" description="Kalkulačka denního příjmu a přepočet receptů na vaše kcal. Počítají jen ve vašem prohlížeči, nic neukládáme."
+  crumbs={[{ name: 'Úvod', href: '/' }, { name: 'Kalkulačky' }]}>
+  <div class="wrap" style="padding-top:16px">
+    <h1 class="h1">Kalkulačky</h1>
+    <p class="lead">Počítají jen ve vašem prohlížeči. Nic neukládáme ani neodesíláme.</p>
+    <div class="grid-3" style="margin-top:24px">
+      <a class="vod-card" href="/kalkulacky/denni-prijem/">
+        <h2 class="vod-card-name">Kolik mám jíst</h2>
+        <p class="vod-card-summary">Denní příjem na udržení váhy i na pozvolné hubnutí, s bezpečnou spodní hranicí.</p>
+      </a>
+      {recepty[0] && (
+        <a class="vod-card" href={`/recepty/${recepty[0].id}/`}>
+          <h2 class="vod-card-name">Recept na vaše kcal</h2>
+          <p class="vod-card-summary">Posuvník u každého receptu přepočítá gramy surovin podle energie na porci.</p>
+        </a>
+      )}
+    </div>
+  </div>
+</Base>

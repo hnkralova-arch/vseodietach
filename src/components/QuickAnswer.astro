@@ -1,0 +1,9 @@
+---
+/** Rychlá odpověď nahoře na stránce. Nejcitovatelnější odstavec i pro AI vyhledávače. */
+interface Props { title?: string }
+const { title = 'Krátce' } = Astro.props;
+---
+<aside class="vod-quick" aria-label={title}>
+  <p class="vod-quick-title"><span class="vod-quick-dot" aria-hidden="true"></span>{title}</p>
+  <div class="vod-quick-body"><slot /></div>
+</aside>

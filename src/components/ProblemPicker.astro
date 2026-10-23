@@ -1,0 +1,34 @@
+---
+/** Rozcestník „Co právě řešíte?“. Položka bez odkazu se ukáže jako „Připravujeme“, aby web neměl mrtvé odkazy. */
+import Icon, { type IconName } from './Icon.astro';
+interface Item { label: string; hint: string; icon: IconName; tone: 'teal' | 'berry' | 'lemon'; href?: string }
+interface Props { question?: string; intro?: string; items: Item[] }
+const { question = 'Co právě řešíte?', intro, items } = Astro.props;
+---
+<section class="vod-picker" aria-labelledby="picker-q">
+  <h1 class="vod-picker-q" id="picker-q">{question}</h1>
+  {intro && <p class="vod-picker-intro">{intro}</p>}
+  <ul class="vod-picker-list">
+    {items.map((it) => (
+      <li class="vod-picker-item">
+        {it.href ? (
+          <a href={it.href}>
+            <span class={`vod-picker-badge vod-badge-${it.tone}`}><Icon name={it.icon} size={24} /></span>
+            <span class="vod-picker-text"><span class="vod-picker-label">{it.label}</span><span class="vod-picker-hint">{it.hint}</span></span>
+            <Icon name="chevron" class="vod-picker-chevron" />
+          </a>
+        ) : (
+          <div class="vod-picker-soon">
+            <span class={`vod-picker-badge vod-badge-${it.tone}`}><Icon name={it.icon} size={24} /></span>
+            <span class="vod-picker-text"><span class="vod-picker-label">{it.label}</span><span class="vod-picker-hint">Připravujeme</span></span>
+          </div>
+        )}
+      </li>
+    ))}
+  </ul>
+  <slot />
+</section>
+<style>
+  .vod-picker-soon { display: flex; align-items: center; gap: var(--space-4); min-height: 72px; padding: var(--space-4) var(--space-1); border-bottom: 1px solid var(--line); color: var(--ink-muted); }
+  .vod-picker-soon .vod-picker-label { color: var(--ink-muted); }
+</style>

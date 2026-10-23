@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import Tag from '../../components/Tag.astro';
+import { published } from '../../lib/content';
+import { recipeNutrition, nf } from '../../lib/nutrition';
+const recepty = await published('recepty');
+---
+<Base title="Recepty s přepočtem kcal" description="Jednoduché recepty, u kterých si nastavíte energii na porci a gramy surovin se samy přepočítají."
+  crumbs={[{ name: 'Úvod', href: '/' }, { name: 'Recepty' }]}>
+  <div class="wrap" style="padding-top:16px">
+    <h1 class="h1">Recepty</h1>
+    <p class="lead">U každého receptu si nastavíte, kolik energie má mít porce. Gramy surovin se přepočítají.</p>
+    <div class="grid-3" style="margin-top:24px">
+      {recepty.map((r) => {
+        const kcal = recipeNutrition(r.data.ingredients, r.data.portions).perPortion.kcal;
+        return (
+          <a class="vod-card" href={`/recepty/${r.id}/`}>
+            <h2 class="vod-card-name">{r.data.title}</h2>
+            <p class="vod-card-summary">{r.data.description}</p>
+            <span class="vod-card-tags">{r.data.tags.slice(0, 2).map((t) => <Tag>{t}</Tag>)}<Tag tone="outline">{nf(Math.round(kcal / 10) * 10)} kcal na porci</Tag></span>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</Base>

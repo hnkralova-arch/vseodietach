@@ -1,0 +1,48 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import QuickAnswer from '../../components/QuickAnswer.astro';
+import SourceMeta from '../../components/SourceMeta.astro';
+import Notice from '../../components/Notice.astro';
+import Icon from '../../components/Icon.astro';
+import { published } from '../../lib/content';
+import { AUTHOR } from '../../config';
+
+export async function getStaticPaths() {
+  const all = await published('problemy');
+  return all.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const schema = [{
+  '@type': 'Article', headline: d.title, description: d.description, inLanguage: 'cs',
+  datePublished: d.published.toISOString(), dateModified: d.updated.toISOString(),
+  author: { '@type': 'Organization', name: AUTHOR },
+}];
+---
+<Base title={d.title} description={d.description} ogType="article" schema={schema}
+  crumbs={[{ name: 'Úvod', href: '/' }, { name: 'Co řešíte', href: '/#co-resite' }, { name: d.title }]}>
+  <div class="wrap" style="padding-top:16px">
+    <article class="stack" style="max-width:820px">
+      <div>
+        <h1 class="h1">{d.title}</h1>
+        <p class="lead" style="margin:0">{d.lead}</p>
+      </div>
+      <SourceMeta author={AUTHOR} updated={d.updated} sources={d.sources.length} />
+      <QuickAnswer><p>{d.quickAnswer}</p></QuickAnswer>
+      <section class="panel" aria-labelledby="poznavate">
+        <h2 id="poznavate" style="margin:0;font-size:20px;line-height:26px">Poznáváte se?</h2>
+        <ul class="vod-checklist is-yes">{d.checklist.map((c) => <li><Icon name="check" /><span>{c}</span></li>)}</ul>
+      </section>
+      <div class="prose"><Content /></div>
+      <Notice tone="info" title="Kdy jít k lékaři nebo nutričnímu terapeutovi">{d.whenToSeeDoctor}</Notice>
+      {d.tool && <p><a class="vod-btn vod-btn-primary" href={d.tool.href}>{d.tool.label}</a></p>}
+      <Notice tone="help" title="Trápí vás jídlo nebo váha víc, než byste chtěli?" action={{ label: 'Kde najít podporu', href: '/pomoc/' }}>Nejste na to sami. Odborníci na poruchy příjmu potravy pomáhají.</Notice>
+      <section class="prose" aria-labelledby="zdroje">
+        <h2 id="zdroje">Zdroje</h2>
+        <ol class="sources">{d.sources.map((s) => <li>{s.url ? <a href={s.url} rel="noopener">{s.title}</a> : s.title}</li>)}</ol>
+      </section>
+    </article>
+  </div>
+</Base>

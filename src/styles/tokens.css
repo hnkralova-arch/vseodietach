@@ -1,0 +1,94 @@
+/* Vše o dietách – design tokeny. Zdroj pravdy je tokens.json v design systému. */
+:root, [data-theme="light"] {
+  --paper: #fafcfb;
+  --paper-raised: #ffffff;
+  --teal-wash: #ddeeec;
+  --line: #d0e1df;
+  --line-strong: #6a8786;
+  --ink: #0f2427;
+  --ink-muted: #465f60;
+  --teal: #19454b;
+  --teal-bright: #2a8a86;
+  --berry: #c2185b;
+  --on-berry: #ffffff;
+  --berry-soft: #fde2ec;
+  --lemon: #ffc93c;
+  --lemon-soft: #fff3cc;
+  --brick: #b23c17;
+  --brick-soft: #fde6dc;
+  --link: var(--teal);
+  --shadow-float: 0 8px 24px -6px #0f242729;
+  --focus-ring: 0 0 0 2px #fafcfb, 0 0 0 4px #c2185b;
+}
+[data-theme="dark"] {
+  --paper: #0b1a1c;
+  --paper-raised: #112628;
+  --teal-wash: #14302f;
+  --line: #22403f;
+  --line-strong: #6e8f8d;
+  --ink: #e6f2f1;
+  --ink-muted: #a0b9b8;
+  --teal: #6fc7c0;
+  --teal-bright: #3aa39d;
+  --berry: #ff7aa8;
+  --on-berry: #2a0a16;
+  --berry-soft: #3d1626;
+  --lemon: #ffd25c;
+  --lemon-soft: #3a3214;
+  --brick: #ff9b7a;
+  --brick-soft: #3d1f14;
+  --link: var(--teal);
+  --shadow-float: 0 10px 28px -4px #000000b3;
+  --focus-ring: 0 0 0 2px #0b1a1c, 0 0 0 4px #ff7aa8;
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --radius-sm: 6px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+  --font-sans: Figtree, "Segoe UI", system-ui, sans-serif;
+}
+.display { font-family: var(--font-sans); font-size: 48px; line-height: 52px; font-weight: 800; letter-spacing: -0.025em; }
+.h1 { font-family: var(--font-sans); font-size: 36px; line-height: 42px; font-weight: 800; letter-spacing: -0.02em; }
+.h2 { font-family: var(--font-sans); font-size: 26px; line-height: 32px; font-weight: 750; letter-spacing: -0.015em; }
+.diet-name { font-family: var(--font-sans); font-size: 22px; line-height: 28px; font-weight: 750; letter-spacing: -0.01em; }
+.h3 { font-family: var(--font-sans); font-size: 20px; line-height: 26px; font-weight: 700; }
+.lead { font-family: var(--font-sans); font-size: 19px; line-height: 30px; font-weight: 400; }
+.body { font-family: var(--font-sans); font-size: 17px; line-height: 28px; font-weight: 400; }
+.small { font-family: var(--font-sans); font-size: 15px; line-height: 22px; font-weight: 400; }
+.label { font-family: var(--font-sans); font-size: 15px; line-height: 20px; font-weight: 700; }
+.figure { font-family: var(--font-sans); font-size: 36px; line-height: 40px; font-weight: 700; }
+@font-face { font-family: "Figtree"; src: url("/fonts/Figtree-Variable.woff2") format("woff2"); font-weight: 300 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Figtree"; src: url("/fonts/Figtree-Italic-Variable.woff2") format("woff2"); font-weight: 300 900; font-style: italic; font-display: swap; }
+
+/* Tmavý režim podle nastavení systému (bez JavaScriptu). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0b1a1c;
+    --paper-raised: #112628;
+    --teal-wash: #14302f;
+    --line: #22403f;
+    --line-strong: #6e8f8d;
+    --ink: #e6f2f1;
+    --ink-muted: #a0b9b8;
+    --teal: #6fc7c0;
+    --teal-bright: #3aa39d;
+    --berry: #ff7aa8;
+    --on-berry: #2a0a16;
+    --berry-soft: #3d1626;
+    --lemon: #ffd25c;
+    --lemon-soft: #3a3214;
+    --brick: #ff9b7a;
+    --brick-soft: #3d1f14;
+    --link: var(--teal);
+    --shadow-float: 0 10px 28px -4px #000000b3;
+    --focus-ring: 0 0 0 2px #0b1a1c, 0 0 0 4px #ff7aa8;
+  }
+}

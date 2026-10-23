@@ -1,0 +1,194 @@
+
+/* Vše o dietách – styly komponent. Hodnoty jsou tokeny z tokens.css. */
+body { margin: 0; font-family: var(--font-sans); font-size: 17px; line-height: 28px; background: var(--paper); color: var(--ink); -webkit-font-smoothing: antialiased; }
+.vod-stage { padding: var(--space-6); }
+.vod-stack { display: grid; gap: var(--space-4); }
+.vod-row { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+.vod-icon { width: 20px; height: 20px; flex: none; display: block; }
+.vod a { color: var(--link); text-underline-offset: 3px; }
+:where(.vod) :focus-visible { outline: 2px solid transparent; box-shadow: var(--focus-ring); }
+
+/* Button */
+.vod-btn { font: inherit; font-weight: 700; font-size: 17px; line-height: 24px; min-height: 48px; padding: 12px var(--space-6); border-radius: var(--radius-sm); border: 2px solid transparent; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); cursor: pointer; text-decoration: none; }
+.vod-btn:focus-visible { outline: 2px solid transparent; box-shadow: var(--focus-ring); }
+.vod-btn-primary { background: var(--berry); color: var(--on-berry); }
+.vod-btn-primary:hover { filter: brightness(1.12); }
+.vod-btn-secondary { background: transparent; color: var(--teal); border-color: var(--teal); }
+.vod-btn-secondary:hover { background: var(--teal-wash); }
+.vod-btn-quiet { background: transparent; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; padding-left: var(--space-2); padding-right: var(--space-2); }
+.vod-btn-quiet:hover { color: var(--berry); }
+.vod-btn-small { min-height: 40px; padding: 8px var(--space-4); font-size: 15px; line-height: 20px; }
+
+/* Tag */
+.vod-tag { display: inline-flex; align-items: center; font-size: 15px; line-height: 20px; padding: 4px 12px; border-radius: var(--radius-full); background: var(--teal-wash); color: var(--ink); white-space: nowrap; }
+.vod-tag-berry { background: var(--berry-soft); }
+.vod-tag-lemon { background: var(--lemon-soft); }
+.vod-tag-outline { background: transparent; border: 1px solid var(--line-strong); padding: 3px 11px; }
+
+/* ProblemPicker — the signature: one big question, an index of real problems */
+.vod-picker { container-type: inline-size; }
+.vod-picker-q { font-weight: 800; font-size: 36px; line-height: 40px; letter-spacing: -0.025em; margin: 0 0 var(--space-3); max-width: 14ch; color: var(--ink); text-wrap: balance; }
+.vod-picker-intro { margin: 0 0 var(--space-8); color: var(--ink-muted); max-width: 52ch; }
+.vod-picker-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--line); }
+.vod-picker-item a { display: flex; align-items: center; gap: var(--space-4); min-height: 72px; padding: var(--space-4) var(--space-1); border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); }
+.vod-picker-text { flex: 1; display: grid; gap: 2px; }
+.vod-picker-label { font-size: 20px; line-height: 26px; font-weight: 700; }
+.vod-picker-hint { font-size: 15px; line-height: 22px; color: var(--ink-muted); }
+.vod-picker-item a:hover .vod-picker-label { color: var(--berry); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 2px; }
+.vod-picker-foot { margin: var(--space-6) 0 0; color: var(--ink-muted); }
+@container (min-width: 600px) {
+  .vod-picker-q { font-size: 48px; line-height: 52px; }
+  .vod-picker-list { grid-template-columns: 1fr 1fr; column-gap: var(--space-8); }
+}
+
+/* QuickAnswer */
+.vod-quick { background: var(--lemon-soft); border-radius: var(--radius-lg); padding: var(--space-6); max-width: 68ch; }
+.vod-quick-title { display: flex; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-2); font-size: 15px; line-height: 20px; font-weight: 700; color: var(--ink); }
+.vod-quick-dot { width: 10px; height: 10px; border-radius: var(--radius-full); background: var(--lemon); flex: none; }
+.vod-quick-body { margin: 0; font-size: 19px; line-height: 30px; }
+.vod-quick-body p { margin: 0; }
+.vod-quick-body p + p { margin-top: var(--space-3); }
+
+/* Meter */
+.vod-meter { display: inline-flex; align-items: center; gap: var(--space-2); font-size: 15px; line-height: 22px; }
+.vod-meter-label { color: var(--ink-muted); }
+.vod-meter-dots { display: inline-flex; gap: 4px; }
+.vod-meter-dot { width: 10px; height: 10px; border-radius: var(--radius-full); border: 1.5px solid var(--line-strong); box-sizing: border-box; }
+.vod-meter-dot.is-on { background: var(--teal); border-color: var(--teal); }
+.vod-meter-value { font-weight: 700; color: var(--ink); }
+
+/* DietSummary */
+.vod-summary { container-type: inline-size; background: var(--teal-wash); border-radius: var(--radius-lg); padding: var(--space-6); }
+.vod-summary-title { margin: 0 0 var(--space-4); font-size: 20px; line-height: 26px; font-weight: 700; }
+.vod-summary-cols { display: grid; gap: var(--space-6); }
+.vod-summary h4 { margin: 0 0 var(--space-2); font-size: 15px; line-height: 20px; font-weight: 700; }
+.vod-checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.vod-checklist li { display: flex; gap: var(--space-2); align-items: flex-start; }
+.vod-checklist .vod-icon { margin-top: 4px; }
+.vod-checklist.is-yes .vod-icon { color: var(--teal); }
+.vod-checklist.is-no .vod-icon { color: var(--brick); }
+.vod-summary-meters { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-8); margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--line); }
+@container (min-width: 560px) { .vod-summary-cols { grid-template-columns: 1fr 1fr; } }
+
+/* DietCard */
+.vod-card { display: flex; flex-direction: column; gap: var(--space-3); background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: var(--space-6); color: var(--ink); text-decoration: none; height: 100%; box-sizing: border-box; }
+a.vod-card:hover { border-color: var(--line-strong); }
+a.vod-card:hover .vod-card-name { color: var(--berry); }
+.vod-card-name { margin: 0; font-size: 22px; line-height: 28px; font-weight: 750; letter-spacing: -0.01em; }
+.vod-card-summary { margin: 0; font-size: 17px; line-height: 26px; color: var(--ink-muted); }
+.vod-card-meters { display: grid; gap: 2px; margin-top: auto; padding-top: var(--space-2); }
+.vod-card-meters .vod-meter-label { min-width: 5.8em; }
+.vod-card-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+/* CompareTable */
+.vod-compare { container-type: inline-size; }
+.vod-compare-table { width: 100%; border-collapse: collapse; background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; border-style: hidden; box-shadow: 0 0 0 1px var(--line); }
+.vod-compare-table th, .vod-compare-table td { text-align: left; vertical-align: top; padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--line); font-size: 17px; line-height: 26px; }
+.vod-compare-table tr:last-child th, .vod-compare-table tr:last-child td { border-bottom: 0; }
+.vod-compare-table thead th { font-size: 22px; line-height: 28px; font-weight: 750; letter-spacing: -0.01em; background: var(--teal-wash); }
+.vod-compare-table tbody th { font-size: 15px; line-height: 26px; font-weight: 700; color: var(--ink-muted); width: 28%; }
+.vod-compare-cards { display: none; gap: var(--space-4); }
+.vod-compare-card { background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-6); }
+.vod-compare-card h3 { margin: 0 0 var(--space-2); font-size: 22px; line-height: 28px; font-weight: 750; letter-spacing: -0.01em; }
+.vod-compare-card dl { margin: 0; display: grid; gap: var(--space-2); }
+.vod-compare-card dt { font-size: 15px; line-height: 20px; font-weight: 700; color: var(--ink-muted); }
+.vod-compare-card dd { margin: 0; }
+.vod-compare-verdict { margin: var(--space-4) 0 0; max-width: 68ch; }
+@container (max-width: 559px) { .vod-compare-table { display: none; } .vod-compare-cards { display: grid; } }
+
+/* KcalScaler */
+.vod-scaler { container-type: inline-size; background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: var(--space-6); }
+.vod-scaler-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--space-2) var(--space-4); margin-bottom: var(--space-4); }
+.vod-scaler-title { margin: 0; font-size: 20px; line-height: 26px; font-weight: 700; }
+.vod-scaler-controls { display: grid; gap: var(--space-6); padding-bottom: var(--space-6); border-bottom: 1px solid var(--line); }
+.vod-field-label { display: block; font-size: 15px; line-height: 20px; font-weight: 700; margin-bottom: var(--space-2); }
+.vod-figure { font-size: 36px; line-height: 40px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); }
+.vod-figure-unit { font-size: 17px; font-weight: 400; color: var(--ink-muted); margin-left: 4px; }
+.vod-range { width: 100%; margin: var(--space-3) 0 var(--space-2); accent-color: var(--berry); height: 32px; cursor: pointer; }
+.vod-range-scale { display: flex; justify-content: space-between; font-size: 15px; line-height: 22px; color: var(--ink-muted); }
+.vod-presets { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+.vod-chip { font: inherit; font-size: 15px; line-height: 20px; min-height: 40px; padding: 8px 14px; border-radius: var(--radius-full); border: 1px solid var(--line-strong); background: transparent; color: var(--ink); cursor: pointer; font-variant-numeric: tabular-nums; }
+.vod-chip[aria-pressed="true"] { background: var(--berry-soft); border-color: var(--berry); font-weight: 700; }
+.vod-chip:focus-visible, .vod-step:focus-visible, .vod-range:focus-visible { outline: 2px solid transparent; box-shadow: var(--focus-ring); }
+.vod-stepper { display: inline-flex; align-items: center; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); }
+.vod-step { font: inherit; font-size: 22px; line-height: 1; width: 48px; height: 48px; border: 0; background: transparent; color: var(--ink); cursor: pointer; border-radius: var(--radius-sm); }
+.vod-step:disabled { color: var(--line-strong); cursor: not-allowed; }
+.vod-stepper output { min-width: 3ch; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+.vod-ingredients { list-style: none; margin: var(--space-4) 0 0; padding: 0; }
+.vod-ingredients li { display: grid; grid-template-columns: 7.5ch 1fr; gap: var(--space-4); padding: var(--space-2) 0; border-bottom: 1px solid var(--line); }
+.vod-ingredients li:last-child { border-bottom: 0; }
+.vod-amount { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+.vod-scaler-totals { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin-top: var(--space-4); padding: var(--space-3) var(--space-4); background: var(--teal-wash); border-radius: var(--radius-sm); font-size: 15px; line-height: 22px; font-variant-numeric: tabular-nums; }
+.vod-scaler-totals b { font-weight: 700; }
+.vod-note { margin: var(--space-3) 0 0; font-size: 15px; line-height: 22px; color: var(--ink-muted); }
+@container (min-width: 560px) { .vod-scaler-controls { grid-template-columns: 1fr auto; align-items: start; column-gap: var(--space-8); } }
+
+/* CalcResult */
+.vod-result { container-type: inline-size; background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: var(--space-6); }
+.vod-result-grid { display: grid; gap: var(--space-4); }
+.vod-result-item { display: grid; gap: var(--space-1); }
+.vod-result-item + .vod-result-item { padding-top: var(--space-4); border-top: 1px solid var(--line); }
+.vod-result-label { font-size: 15px; line-height: 20px; font-weight: 700; }
+.vod-result-explain { margin: 0; font-size: 15px; line-height: 22px; color: var(--ink-muted); }
+.vod-result .vod-notice { margin-top: var(--space-6); }
+@container (min-width: 560px) {
+  .vod-result-grid { grid-template-columns: 1fr 1fr; column-gap: var(--space-8); }
+  .vod-result-item + .vod-result-item { padding-top: 0; border-top: 0; padding-left: var(--space-8); border-left: 1px solid var(--line); }
+}
+
+/* Notice */
+.vod-notice { display: flex; gap: var(--space-3); align-items: flex-start; border-radius: var(--radius-lg); padding: var(--space-4) var(--space-6) var(--space-4) var(--space-4); max-width: 68ch; }
+.vod-notice .vod-icon { margin-top: 4px; }
+.vod-notice-info { background: var(--teal-wash); }
+.vod-notice-info .vod-icon { color: var(--teal); }
+.vod-notice-help { background: var(--berry-soft); }
+.vod-notice-help .vod-icon { color: var(--berry); }
+.vod-notice-risk { background: var(--brick-soft); }
+.vod-notice-risk .vod-icon { color: var(--brick); }
+.vod-notice-title { margin: 0; font-weight: 700; }
+.vod-notice-body { margin: 0; }
+.vod-notice-body p { margin: 0; }
+.vod-notice-action { display: inline-block; margin-top: var(--space-2); font-weight: 700; }
+.vod-notice-help .vod-notice-action { color: var(--berry); }
+.vod-notice-risk .vod-notice-action { color: var(--brick); }
+
+/* SourceMeta */
+.vod-meta { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); font-size: 15px; line-height: 22px; color: var(--ink-muted); padding: var(--space-3) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.vod-meta-item { display: inline-flex; align-items: center; gap: var(--space-2); }
+.vod-meta-item .vod-icon { width: 18px; height: 18px; color: var(--teal); }
+.vod-meta a { color: var(--link); font-weight: 700; }
+
+/* Plate fills (Logo, PlateChart) */
+.vod-fill-teal { fill: var(--teal-bright); background: var(--teal-bright); }
+.vod-fill-berry { fill: var(--berry); background: var(--berry); }
+.vod-fill-lemon { fill: var(--lemon); background: var(--lemon); }
+
+/* Logo */
+.vod-logo { display: block; color: var(--ink); flex: none; }
+.vod-logo-link { display: inline-flex; border-radius: var(--radius-sm); }
+.vod-logo-link:focus-visible { outline: 2px solid transparent; box-shadow: var(--focus-ring); }
+
+/* ProblemPicker icon badges: a small plate per problem */
+.vod-picker-badge { flex: none; width: 48px; height: 48px; border-radius: var(--radius-full); display: grid; place-items: center; }
+.vod-picker-badge .vod-icon { width: 24px; height: 24px; }
+.vod-badge-teal { background: var(--teal-wash); color: var(--teal); }
+.vod-badge-berry { background: var(--berry-soft); color: var(--berry); }
+.vod-badge-lemon { background: var(--lemon-soft); color: var(--ink); }
+.vod-picker-item .vod-picker-chevron { color: var(--teal); }
+.vod-picker-item a:hover .vod-picker-chevron { color: var(--berry); transform: translateX(2px); }
+.vod-picker-item a:hover .vod-picker-badge { box-shadow: inset 0 0 0 2px currentColor; }
+@media (prefers-reduced-motion: reduce) { .vod-picker-item a:hover .vod-picker-chevron { transform: none; } }
+
+/* PlateChart */
+.vod-plate { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
+.vod-plate svg { display: block; flex: none; }
+.vod-plate figcaption { display: grid; gap: var(--space-1); flex: 1 1 150px; min-width: 0; }
+.vod-plate-title { font-size: 15px; line-height: 20px; font-weight: 700; }
+.vod-plate-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: 15px; line-height: 22px; }
+.vod-plate-legend li { display: grid; grid-template-columns: 12px 1fr auto; align-items: center; gap: var(--space-2); min-width: 0; }
+.vod-plate-legend b { font-variant-numeric: tabular-nums; font-weight: 700; text-align: right; }
+.vod-plate-swatch { width: 12px; height: 12px; border-radius: var(--radius-full); }
+
+/* DietCard header with a compact plate */
+.vod-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-3); }
+.vod-stroke-teal { stroke: var(--teal); }

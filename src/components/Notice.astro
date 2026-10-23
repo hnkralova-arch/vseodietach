@@ -1,0 +1,15 @@
+---
+/** Upozornění: info (nenahrazuje lékaře), risk (rizika), help (odkaz na odbornou pomoc). Tón nese ikona i nadpis, ne jen barva. */
+import Icon from './Icon.astro';
+interface Props { tone?: 'info' | 'risk' | 'help'; title?: string; action?: { label: string; href: string } }
+const { tone = 'info', title, action } = Astro.props;
+const icon = ({ info: 'info', help: 'help', risk: 'alert' } as const)[tone];
+---
+<aside class={`vod-notice vod-notice-${tone}`} role={tone === 'risk' ? 'note' : undefined}>
+  <Icon name={icon} />
+  <div>
+    {title && <p class="vod-notice-title">{title}</p>}
+    <div class="vod-notice-body"><slot /></div>
+    {action && <a class="vod-notice-action" href={action.href}>{action.label}</a>}
+  </div>
+</aside>

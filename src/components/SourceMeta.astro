@@ -1,0 +1,15 @@
+---
+/** Řádek důvěry pod perexem: autor, datum aktualizace, počet zdrojů, odkaz na „Jak web vzniká“. */
+import Icon from './Icon.astro';
+interface Props { author: string; updated: Date; sources: number; sourcesHref?: string }
+const { author, updated, sources, sourcesHref = '#zdroje' } = Astro.props;
+const fmt = new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' }).format(updated);
+const iso = updated.toISOString().slice(0, 10);
+const word = sources === 1 ? 'zdroj' : sources >= 2 && sources <= 4 ? 'zdroje' : 'zdrojů';
+---
+<div class="vod-meta">
+  <span class="vod-meta-item"><Icon name="pen" size={18} />{author}</span>
+  <span class="vod-meta-item"><Icon name="calendar" size={18} /><span>Aktualizováno <time datetime={iso}>{fmt}</time></span></span>
+  {sources > 0 && <span class="vod-meta-item"><Icon name="book" size={18} /><a href={sourcesHref}>{sources} {word}</a></span>}
+  <span class="vod-meta-item"><a href="/jak-web-vznika/">Jak web vzniká</a></span>
+</div>

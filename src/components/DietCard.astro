@@ -1,0 +1,23 @@
+---
+import Meter from './Meter.astro';
+import Tag from './Tag.astro';
+import PlateChart from './PlateChart.astro';
+interface Props {
+  name: string; summary: string; href: string; difficulty: number; cost: number;
+  tags?: string[]; macros?: { carbs: number; protein: number; fat: number }; headingLevel?: 'h2' | 'h3';
+}
+const { name, summary, href, difficulty, cost, tags = [], macros, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+---
+<a class="vod-card" href={href}>
+  <span class="vod-card-top">
+    <H class="vod-card-name">{name}</H>
+    {macros && <PlateChart compact size={44} id={`card-${href.replace(/[^a-z0-9]/gi, '')}`} {...macros} />}
+  </span>
+  <p class="vod-card-summary">{summary}</p>
+  {tags.length > 0 && <span class="vod-card-tags">{tags.slice(0, 2).map((t) => <Tag>{t}</Tag>)}</span>}
+  <span class="vod-card-meters">
+    <Meter label="Náročnost" value={difficulty} />
+    <Meter label="Cena" value={cost} />
+  </span>
+</a>

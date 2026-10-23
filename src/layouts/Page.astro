@@ -1,0 +1,14 @@
+---
+/** Jednoduchá textová stránka (Jak web vzniká, O nás…). */
+import Base from './Base.astro';
+interface Props { title: string; description: string; noindex?: boolean }
+const { title, description, noindex } = Astro.props;
+---
+<Base title={title} description={description} noindex={noindex} crumbs={[{ name: 'Úvod', href: '/' }, { name: title }]}>
+  <div class="wrap" style="padding-top:16px">
+    <article class="prose" style="max-width:760px">
+      <h1 class="h1">{title}</h1>
+      <slot />
+    </article>
+  </div>
+</Base>

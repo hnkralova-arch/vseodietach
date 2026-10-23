@@ -1,0 +1,73 @@
+---
+import Base from '../../layouts/Base.astro';
+import Tag from '../../components/Tag.astro';
+import SourceMeta from '../../components/SourceMeta.astro';
+import KcalScaler from '../../components/KcalScaler.astro';
+import PlateChart from '../../components/PlateChart.astro';
+import { published } from '../../lib/content';
+import { recipeNutrition, getFood, roundAmount, nf } from '../../lib/nutrition';
+import { AUTHOR } from '../../config';
+
+export async function getStaticPaths() {
+  const recepty = await published('recepty');
+  return recepty.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const r = entry.data;
+const n = recipeNutrition(r.ingredients, r.portions);
+const p = n.perPortion;
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const schema = [{
+  '@type': 'Recipe', name: r.title, description: r.description, inLanguage: 'cs', mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: AUTHOR },
+  datePublished: r.published.toISOString(), dateModified: r.updated.toISOString(),
+  totalTime: `PT${r.minutes}M`, recipeYield: `${r.portions} porce`,
+  keywords: r.tags.join(', '),
+  recipeIngredient: r.ingredients.map((i) => `${nf(roundAmount(i.amount, i.unit), 1)} ${i.unit} ${i.label ?? getFood(i.food).name}`),
+  recipeInstructions: r.steps.map((s) => ({ '@type': 'HowToStep', text: s })),
+  nutrition: {
+    '@type': 'NutritionInformation', servingSize: '1 porce',
+    calories: `${Math.round(p.kcal)} kcal`, proteinContent: `${nf(p.protein)} g`, carbohydrateContent: `${nf(p.carbs)} g`,
+    fatContent: `${nf(p.fat)} g`, fiberContent: `${nf(p.fiber)} g`,
+  },
+}];
+---
+<Base title={r.title} description={r.description} ogType="article" schema={schema}
+  crumbs={[{ name: 'Úvod', href: '/' }, { name: 'Recepty', href: '/recepty/' }, { name: r.title }]}>
+  <div class="wrap">
+    <div class="layout">
+      <article class="main stack">
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          {r.tags.map((t, i) => <Tag tone={i === 1 ? 'lemon' : 'teal'}>{t}</Tag>)}
+          <Tag tone="outline">{r.minutes} minut</Tag>
+        </div>
+        <div>
+          <h1 class="h1">{r.title}</h1>
+          <p class="lead" style="margin:0">{r.lead}</p>
+        </div>
+        <SourceMeta author={AUTHOR} updated={r.updated} sources={1} sourcesHref="#zdroj-dat" />
+        <div class="photo-slot" role="img" aria-label="Místo pro fotku hotového jídla">[Vlastní fotka hotového jídla]</div>
+        <KcalScaler ingredients={r.ingredients} portions={r.portions} />
+        <section class="prose" aria-labelledby="postup">
+          <h2 id="postup">Postup</h2>
+          <ol class="steps">{r.steps.map((s) => <li><span>{s}</span></li>)}</ol>
+        </section>
+      </article>
+      <aside>
+        <div class="panel" style="padding:24px">
+          <PlateChart id="recept" title="Energie v jedné porci" carbs={p.carbs * 4} protein={p.protein * 4} fat={p.fat * 9} />
+          <p class="note-small">Podíl energie ze sacharidů, bílkovin a tuků.</p>
+        </div>
+        {r.diets.length > 0 && (
+          <div class="panel panel-lemon" style="padding:24px">
+            <strong style="font-size:20px;line-height:26px">Hodí se do diet</strong>
+            <ul class="list-links">
+              {r.diets.map((d) => <li>{d.href ? <a href={d.href}>{d.label}</a> : d.label}{d.note && <span class="muted">: {d.note}</span>}</li>)}
+            </ul>
+          </div>
+        )}
+        <p id="zdroj-dat" class="note-small">Zdroj nutričních hodnot: <a href="https://fdc.nal.usda.gov/" rel="noopener">USDA FoodData Central</a>.{!n.verified && ' Hodnoty jsou zatím předběžné.'}</p>
+      </aside>
+    </div>
+  </div>
+</Base>

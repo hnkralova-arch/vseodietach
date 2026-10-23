@@ -1,0 +1,5 @@
+---
+interface Props { tone?: 'teal' | 'berry' | 'lemon' | 'outline' }
+const { tone = 'teal' } = Astro.props;
+---
+<span class:list={['vod-tag', tone !== 'teal' && `vod-tag-${tone}`]}><slot /></span>

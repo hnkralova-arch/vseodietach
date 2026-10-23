@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+<style>.s{fill:#2a8a86}.r{stroke:#19454b}.p{fill:#c2185b}.m{fill:#ffc93c}
+@media (prefers-color-scheme: dark){.s{fill:#3aa39d}.r{stroke:#6fc7c0}.p{fill:#ff7aa8}.m{fill:#ffd25c}}</style>
+<circle class="r" cx="16" cy="16" r="14.1" fill="none" stroke-width="3.6"/>
+<mask id="g" maskUnits="userSpaceOnUse"><rect width="32" height="32" fill="#fff"/><path d="M16,4V28M16,16H28" stroke="#000" stroke-width="2.2"/></mask>
+<g mask="url(#g)"><path class="s" d="M16.00,16.00 L16.00,25.20 A9.20,9.20 0 0 1 16.00,6.80 Z"/><path class="p" d="M16.00,16.00 L16.00,6.80 A9.20,9.20 0 0 1 25.20,16.00 Z"/><path class="m" d="M16.00,16.00 L25.20,16.00 A9.20,9.20 0 0 1 16.00,25.20 Z"/></g>
+</svg>
