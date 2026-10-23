@@ -45,7 +45,8 @@ Novou potravinu přidáš do `foods.json` s anglickým `usdaQuery` a spustíš s
 
 ## Před spuštěním (checklist)
 
-- [ ] V `astro.config.mjs` nastavit skutečnou doménu (`SITE_URL`).
+- [x] Doména `https://www.vseodietach.cz` nastavená v `astro.config.mjs` (`SITE_URL`).
+- [ ] Přesměrovat `vseodietach.cz` (bez www) na `www.vseodietach.cz` (301).
 - [ ] Doplnit zdroje u Keto (`src/content/diety/keto.md`, položky `todo: true`).
 - [ ] Spustit `npm run usda` a ověřit nutriční hodnoty.
 - [ ] Doplnit provozovatele a kontakt (`src/pages/o-nas.astro`, `src/pages/ochrana-osobnich-udaju.astro`).

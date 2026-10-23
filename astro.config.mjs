@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// TODO: doplnit skutečnou doménu (TLD), na které web poběží.
+// Hlavní doména webu (verze s www). Holá vseodietach.cz má přesměrovat sem.
 export const SITE_URL = 'https://www.vseodietach.cz';
 
 export default defineConfig({
